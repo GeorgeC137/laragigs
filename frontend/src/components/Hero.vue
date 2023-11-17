@@ -9,16 +9,16 @@
 
     <div class="z-10">
       <h1 class="text-6xl font-bold uppercase text-white">
-        Lara<span class="text-black">Gigs</span>
+        My<span class="text-black">Gigs</span>
       </h1>
       <p class="text-2xl text-gray-200 font-bold my-4">
-        Find or post Laravel jobs & projects
+        Find or post Software jobs & projects
       </p>
       <div>
         <router-link
-          :to="{ name: 'Register' }"
+          :to="{ name: 'CreateGig' }"
           class="inline-block border-2 border-white text-white py-2 px-4 rounded-xl uppercase mt-2 hover:text-black hover:border-black"
-          >Sign Up to List a Gig</router-link
+          >Add A New Gig</router-link
         >
       </div>
     </div>

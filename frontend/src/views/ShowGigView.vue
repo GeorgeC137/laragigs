@@ -1,4 +1,6 @@
 <template>
+  <!-- Search  -->
+  <Search />
   <router-link :to="{ name: 'Home' }" class="inline-block text-black ml-4 mb-4"
     ><i class="fa-solid fa-arrow-left"></i> Back
   </router-link>
@@ -62,4 +64,6 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Search from "../components/Search.vue";
+</script>

@@ -6,7 +6,7 @@
       /></router-link>
       <ul class="flex space-x-6 mr-6 text-lg">
         <li>
-          <router-link :to="{ name: 'Gig' }" class="hover:text-laravel"
+          <router-link :to="{ name: 'ManageGig' }" class="hover:text-laravel"
             ><i class="fa-solid fa-gear"></i> Manage Gigs</router-link
           >
         </li>
@@ -19,8 +19,6 @@
     </nav>
 
     <main>
-      <!-- Search  -->
-      <Search />
       <router-view></router-view>
     </main>
 
@@ -39,7 +37,6 @@
 </template>
 
 <script setup>
-import Search from "./Search.vue";
 import store from "../store";
 import { useRouter } from "vue-router";
 

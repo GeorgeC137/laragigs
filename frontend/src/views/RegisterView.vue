@@ -5,28 +5,6 @@
   </header>
 
   <form @submit="register">
-    <div
-      v-if="errorMsg"
-      class="bg-red-500 flex items-center justify-between rounded py-3 px-5 text-white mt-4 font-semibold"
-    >
-      {{ errorMsg }}
-      <span
-        @click="errorMsg = ''"
-        class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </span>
-    </div>
-
     <div class="mb-6">
       <label for="name" class="inline-block text-lg mb-2"> Name </label>
       <input
@@ -34,9 +12,12 @@
         type="text"
         class="border border-gray-200 rounded p-2 w-full"
         name="name"
-        required
         autocomplete="name"
       />
+
+      <div v-if="errors.name">
+        <span class="text-sm text-red-500">{{ errors.name[0] }}</span>
+      </div>
     </div>
 
     <div class="mb-6">
@@ -46,9 +27,12 @@
         type="email"
         class="border border-gray-200 rounded p-2 w-full"
         name="email"
-        required
         autocomplete="email"
       />
+
+      <div v-if="errors.email">
+        <span class="text-sm text-red-500">{{ errors.email[0] }}</span>
+      </div>
     </div>
 
     <div class="mb-6">
@@ -58,9 +42,12 @@
         type="password"
         class="border border-gray-200 rounded p-2 w-full"
         name="password"
-        required
         autocomplete="password"
       />
+
+      <div v-if="errors.password">
+        <span class="text-sm text-red-500">{{ errors.password[0] }}</span>
+      </div>
     </div>
 
     <div class="mb-6">
@@ -72,9 +59,12 @@
         type="password"
         class="border border-gray-200 rounded p-2 w-full"
         name="password_confirmation"
-        required
         autocomplete="password"
       />
+
+      <div v-if="errors.password_confirmation">
+        <span class="text-sm text-red-500">{{ errors.password_confirmation[0] }}</span>
+      </div>
     </div>
 
     <div class="mb-6">
@@ -129,7 +119,7 @@ import { ref } from "vue";
 
 const loading = ref(false);
 const router = useRouter();
-const errorMsg = ref("");
+const errors = ref({});
 const user = {
   name: "",
   email: "",
@@ -150,7 +140,9 @@ function register(e) {
     })
     .catch((err) => {
       loading.value = false;
-      errorMsg.value = err.response.data.message;
+      if (err.response.status === 422) {
+        errors.value = err.response.data.errors;
+      }
     });
 }
 </script>

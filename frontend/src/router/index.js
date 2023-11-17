@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from '../view/LoginView.vue';
-import RegisterView from '../view/RegisterView.vue';
-import HomeView from '../view/HomeView.vue';
-import GigView from '../view/GigView.vue';
+import LoginView from '../views/LoginView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import HomeView from '../views/HomeView.vue';
+import ManageGigView from '../views/ManageGigView.vue';
+import CreateGigView from '../views/CreateGigView.vue';
+import EditGigView from '../views/EditGigView.vue';
+import ShowGigView from '../views/ShowGigView.vue';
 import store from '../store';
 import DefaultLayout from '../components/DefaultLayout.vue';
 import AuthLayout from '../components/AuthLayout.vue';
@@ -16,15 +19,30 @@ const routes = [
         component: DefaultLayout,
         children: [
             {
-                path: '/gig',
-                name: 'Gig',
-                component: GigView
+                path: '/gig/show/:id',
+                name: 'ShowGig',
+                component: ShowGigView
             },
             {
                 path: '/home',
                 name: 'Home',
                 component: HomeView
             },
+            {
+                path: 'gigs/manage',
+                name: 'ManageGig',
+                component: ManageGigView
+            },
+            {
+                path: 'gigs/create',
+                name: 'CreateGig',
+                component: CreateGigView
+            },
+            {
+                path: 'gigs/edit/:id',
+                name: 'EditGig',
+                component: EditGigView
+            }
         ]
     },
     {
