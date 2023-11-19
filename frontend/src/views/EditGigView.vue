@@ -6,7 +6,9 @@
         <p class="mb-4">Edit: {{ model.title }}</p>
       </header>
 
-      <form @submit.prevent="editGig">
+      <div v-if="gigLoading" class="flex justify-center font-semibold">Loading...</div>
+
+      <form v-else @submit.prevent="editGig">
         <div class="mb-6">
           <label for="company" class="inline-block text-lg mb-2">Company Name</label>
           <input
@@ -14,6 +16,7 @@
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="company"
+            required
           />
 
           <div v-if="errors.company">
@@ -29,6 +32,7 @@
             class="border border-gray-200 rounded p-2 w-full"
             name="title"
             placeholder="Example: Senior Laravel Developer"
+            required
           />
 
           <div v-if="errors.title">
@@ -44,6 +48,7 @@
             class="border border-gray-200 rounded p-2 w-full"
             name="location"
             placeholder="Example: Remote, Boston MA, etc"
+            required
           />
 
           <div v-if="errors.location">
@@ -58,6 +63,7 @@
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="email"
+            required
           />
 
           <div v-if="errors.email">
@@ -74,6 +80,7 @@
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="website"
+            required
           />
 
           <div v-if="errors.website">
@@ -86,10 +93,11 @@
             Tags (Comma Separated)
           </label>
           <input
-            v-model="model.tag"
+            v-model="model.tags"
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="tags"
+            required
             placeholder="Example: Laravel, Backend, Postgres, etc"
           />
 
@@ -98,44 +106,19 @@
           </div>
         </div>
 
-        <div class="mb-6 flex items-center">
+        <div class="mb-6">
           <label for="logo" class="inline-block text-lg mb-2"> Company Logo </label>
           <img
             v-if="model.logo_preview"
             :src="model.logo_preview"
             :alt="model.title"
-            class="w-64 h-48 object-cover"
+            class="w-64 h-48 object-cover mb-2"
           />
-          <span
-            v-else
-            class="flex items-center justify-between h-12 w-12 rounded-full overflow-hidden bg-gray-100"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-[80%] w-[90%] text-gray-300"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-              />
-            </svg>
-          </span>
-          <button
-            type="button"
-            class="relative overflow-hidden ml-5 border border-gray-200 text-sm shadow-sm rounded-md py-2 px-3 leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:right-2 focus:ring-offset-2"
-          >
-            <input
-              type="file"
-              @change="onImageSelect"
-              class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer"
-            />
-            Change
-          </button>
+          <input
+            type="file"
+            @change="onImageSelect"
+            class="border border-gray-200 rounded p-2 w-full"
+          />
         </div>
 
         <div class="mb-6">
@@ -147,6 +130,7 @@
             class="border border-gray-200 rounded p-2 w-full"
             name="description"
             rows="10"
+            required
             placeholder="Include tasks, requirements, salary, etc"
           >
           </textarea>
@@ -169,13 +153,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch, computed } from "vue";
 import store from "../store";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const errors = ref({});
 const route = useRoute();
+const gigLoading = computed(() => store.state.currentGig.loading);
 
 let model = ref({
   title: "",
@@ -188,10 +173,6 @@ let model = ref({
   company: null,
 });
 
-if (route.params.id) {
-  model.value = store.state.gigs.find((g) => g.id === route.params.id);
-}
-
 function onImageSelect(e) {
   const file = e.target.files[0];
 
@@ -199,22 +180,35 @@ function onImageSelect(e) {
 
   reader.onload = () => {
     // Image to save in database
-    model.logo = reader.result;
+    model.value.logo = reader.result;
 
     // Image to preview
-    model.logo_preview = reader.result;
+    model.value.logo_preview = reader.result;
   };
 
   reader.readAsDataURL(file);
 }
 
+// Watch current gig data and update model whenever it changes
+watch(
+  () => store.state.currentGig.data,
+  (newVal, oldVal) => {
+    model.value = {
+      ...JSON.parse(JSON.stringify(newVal)),
+    };
+  }
+);
+
+if (route.params.id) {
+  store.dispatch("getGig", route.params.id);
+}
+
 function editGig() {
   store
     .dispatch("saveGig", model.value)
-    .then(({ data }) => {
+    .then(() => {
       router.push({
         name: "Home",
-        params: { id: data.data.id },
       });
     })
     .catch((error) => {

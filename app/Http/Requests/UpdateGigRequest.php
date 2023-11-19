@@ -11,13 +11,14 @@ class UpdateGigRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $gig = $this->route('gigs');
+        $gig = $this->route('gig');
 
         if($this->user()->id !== $gig->user_id) {
             return false;
         }
         return true;
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,7 +35,7 @@ class UpdateGigRequest extends FormRequest
             'description' => 'required|string',
             'website' => 'required',
             'location' => 'required',
-            'tag' => 'required'
+            'tags' => 'required'
         ];
     }
 }

@@ -91,7 +91,7 @@
             Tags (Comma Separated)
           </label>
           <input
-            v-model="model.tag"
+            v-model="model.tags"
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="tags"
@@ -99,8 +99,8 @@
             required
           />
 
-          <div v-if="errors.tag">
-            <span class="text-sm text-red-500">{{ errors.tag[0] }}</span>
+          <div v-if="errors.tags">
+            <span class="text-sm text-red-500">{{ errors.tags[0] }}</span>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ let model = ref({
   email: null,
   website: "",
   logo: null,
-  tag: [],
+  tags: [],
   description: null,
   company: null,
 });

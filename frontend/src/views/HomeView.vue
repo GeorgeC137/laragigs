@@ -21,7 +21,7 @@
           <div class="text-xl font-bold mb-4">{{ gig.company }}</div>
           <ul class="flex">
             <li
-              v-for="(tag, index) in gig.tag"
+              v-for="(tag, index) in gig.tags"
               :key="index"
               class="flex items-center justify-center bg-black text-white rounded-xl py-1 px-3 mr-2 text-xs"
             >

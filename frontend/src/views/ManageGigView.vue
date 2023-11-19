@@ -21,12 +21,7 @@
               >
             </td>
             <td class="px-4 py-8 border-t border-b border-gray-300 text-lg">
-              <button
-                v-if="gig.id"
-                class="text-red-600"
-                type="submit"
-                @click="deleteGig(gig)"
-              >
+              <button class="text-red-600" type="submit" @click="deleteGig(gig)">
                 <i class="fa-solid fa-trash-can"></i>
                 Delete
               </button>
@@ -47,6 +42,11 @@ const gigs = computed(() => store.state.gigs);
 function deleteGig(gig) {
   if (confirm("Are you sure you want to delete this gig?")) {
     // delete gig
+    store.dispatch("deleteGig", gig.id).then(() => {
+      router.push({
+        name: "Home",
+      });
+    });
   }
 }
 </script>

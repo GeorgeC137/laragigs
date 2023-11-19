@@ -31,7 +31,7 @@ class GigController extends Controller
         $validatedData = $request->validated();
 
         // Check if validatedData has logo
-        if(isset($validatedData['logo'])) {
+        if (isset($validatedData['logo'])) {
 
             $relativePath = $this->saveImage($validatedData['logo']);
 
@@ -55,7 +55,6 @@ class GigController extends Controller
         } else {
             abort(403, 'Unauthorized Action!!!');
         }
-
     }
 
     /**
@@ -66,7 +65,7 @@ class GigController extends Controller
         $validatedData = $request->validated();
 
         // Check if logo exists then save if it exists
-        if(isset($validatedData['logo'])) {
+        if (isset($validatedData['logo'])) {
             $relativePath = $this->saveImage($validatedData['logo']);
 
             $validatedData['logo'] = $relativePath;
@@ -92,6 +91,13 @@ class GigController extends Controller
 
         if ($user->id === $gig->user_id) {
             $gig->delete();
+
+            // Delete old logo if it exists
+            if ($gig->logo) {
+                $absolutePath = public_path($gig->logo);
+                File::delete($absolutePath);
+            }
+
             return response()->json([
                 'message' => 'Gig deleted successfully'
             ], 200);
@@ -111,7 +117,7 @@ class GigController extends Controller
             $type = strtolower($type[1]); // png, gpg, et.c
 
             // Check if file is an image
-            if(!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
+            if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
                 throw new Exception("Please choose a valid image format('jpg', 'png', 'jpeg', 'gif')");
             }
 
@@ -127,7 +133,7 @@ class GigController extends Controller
 
         // Prepare the path for saving the image
         $dir = 'logos/';
-        $file = Str::random(). '.' . $type;
+        $file = Str::random() . '.' . $type;
         $absolutePath = public_path($dir);
         $relativePath = $dir . $file;
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('email')->unique();
             $table->string('logo')->nullable();
-            $table->string('tag');
+            $table->string('tags');
             $table->string('company');
             $table->string('location');
             $table->string('website');

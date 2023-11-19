@@ -39,7 +39,7 @@ class StoreGigRequest extends FormRequest
             'description' => 'required|string',
             'website' => 'required',
             'location' => 'required',
-            'tag' => 'required'
+            'tags' => 'required'
         ];
     }
 }
