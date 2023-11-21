@@ -188,6 +188,10 @@ function saveGig() {
   store
     .dispatch("saveGig", model.value)
     .then(() => {
+      store.commit("notify", {
+        type: "success",
+        message: "Gig Created Successfully",
+      });
       router.push({
         name: "Home",
       });

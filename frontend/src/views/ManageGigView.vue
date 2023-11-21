@@ -5,7 +5,9 @@
         <h1 class="text-3xl text-center font-bold my-6 uppercase">Manage Gigs</h1>
       </header>
 
-      <table class="w-full table-auto rounded-sm">
+      <div class="flex justify-center font-semibold" v-if="gigsLoading">Loading..</div>
+
+      <table v-else class="w-full animate-fade-in-down table-auto rounded-sm">
         <tbody>
           <tr v-for="gig in gigs" :key="gig.id" class="border-gray-300">
             <td class="px-4 py-8 border-t border-b border-gray-300 text-lg">
@@ -36,8 +38,13 @@
 <script setup>
 import store from "../store";
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 
-const gigs = computed(() => store.state.gigs);
+const gigs = computed(() => store.state.gigs.data);
+const gigsLoading = computed(() => store.state.gigs.loading);
+const router = useRouter();
+
+store.dispatch("getGigs");
 
 function deleteGig(gig) {
   if (confirm("Are you sure you want to delete this gig?")) {

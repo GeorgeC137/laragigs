@@ -4,13 +4,20 @@
   <router-link :to="{ name: 'Home' }" class="inline-block text-black ml-4 mb-4"
     ><i class="fa-solid fa-arrow-left"></i> Back
   </router-link>
-  <div class="mx-4">
+
+  <div v-if="gigLoading" class="flex justify-center font-semibold">Loading...</div>
+
+  <div v-else class="mx-4">
     <div class="bg-gray-50 border border-gray-200 p-10 rounded">
       <div class="flex flex-col items-center justify-center text-center">
-        <img class="w-48 mr-6 mb-6" src="images/acme.png" alt="" />
+        <img
+          class="w-48 mr-6 mb-6"
+          :src="gig.logo_preview ? gig.logo_preview : 'https://picsum.photos/500'"
+          :alt="gig.title"
+        />
 
-        <h3 class="text-2xl mb-2">Senior Laravel Developer</h3>
-        <div class="text-xl font-bold mb-4">Acme Corp</div>
+        <h3 class="text-2xl mb-2">{{ gig.title }}</h3>
+        <div class="text-xl font-bold mb-4">{{ gig.company }}</div>
         <ul class="flex">
           <li class="bg-black text-white rounded-xl px-3 py-1 mr-2">
             <a href="#">Laravel</a>
@@ -26,36 +33,25 @@
           </li>
         </ul>
         <div class="text-lg my-4">
-          <i class="fa-solid fa-location-dot"></i> Daytona, FL
+          <i class="fa-solid fa-location-dot"></i> {{ gig.location }}
         </div>
         <div class="border border-gray-200 w-full mb-6"></div>
         <div>
           <h3 class="text-3xl font-bold mb-4">Job Description</h3>
           <div class="text-lg space-y-6">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non
-              reprehenderit facilis architecto autem quam necessitatibus, odit quod,
-              repellendus voluptate cum. Necessitatibus a id tenetur. Error numquam at
-              modi quaerat.
-            </p>
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-              praesentium eos consequuntur ex voluptatum necessitatibus odio quos
-              cupiditate iste similique rem in, voluptates quod maxime animi veritatis
-              illum quo sapiente.
-            </p>
+            {{ gig.description }}
 
-            <a
-              href="mailto:test@test.com"
+            <router-link
+              :to="gig.email"
               class="block bg-laravel text-white mt-6 py-2 rounded-xl hover:opacity-80"
-              ><i class="fa-solid fa-envelope"></i> Contact Employer</a
+              ><i class="fa-solid fa-envelope"></i> Contact Employer</router-link
             >
 
-            <a
-              href="https://test.com"
+            <router-link
+              :to="gig.website"
               target="_blank"
               class="block bg-black text-white py-2 rounded-xl hover:opacity-80"
-              ><i class="fa-solid fa-globe"></i> Visit Website</a
+              ><i class="fa-solid fa-globe"></i> Visit Website</router-link
             >
           </div>
         </div>
@@ -66,4 +62,15 @@
 
 <script setup>
 import Search from "../components/Search.vue";
+import { computed } from "vue";
+import store from "../store";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const gig = computed(() => store.state.currentGig.data);
+const gigLoading = computed(() => store.state.currentGig.loading);
+
+if (route.params.id) {
+  store.dispatch("getGig", route.params.id);
+}
 </script>

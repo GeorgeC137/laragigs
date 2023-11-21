@@ -4,36 +4,17 @@
 
   <!-- Hero -->
   <Hero />
-  <div class="lg:grid lg:grid-cols-2 gap-4 space-y-4 md:space-y-0 mx-4">
-    <div
-      v-for="gig in gigs"
+
+  <div v-if="gigsLoading" class="flex justify-center font-semibold">Loading...</div>
+
+  <div v-else class="lg:grid lg:grid-cols-2 gap-4 space-y-4 md:space-y-0 mx-4">
+    <GigList
+      v-for="(gig, ind) in gigs"
       :key="gig.id"
-      class="bg-gray-50 border border-gray-200 rounded p-6"
-    >
-      <div class="flex">
-        <img :src="gig.logo" alt="" class="hidden w-48 mr-6 md:block" />
-        <div>
-          <h3 class="text-2xl">
-            <router-link :to="{ name: 'ShowGig', params: { id: gig.id } }">{{
-              gig.title
-            }}</router-link>
-          </h3>
-          <div class="text-xl font-bold mb-4">{{ gig.company }}</div>
-          <ul class="flex">
-            <li
-              v-for="(tag, index) in gig.tags"
-              :key="index"
-              class="flex items-center justify-center bg-black text-white rounded-xl py-1 px-3 mr-2 text-xs"
-            >
-              <router-link to="#">{{ tag }}</router-link>
-            </li>
-          </ul>
-          <div class="text-lg mt-4">
-            <i class="fa-solid fa-location-dot"></i> {{ gig.location }}
-          </div>
-        </div>
-      </div>
-    </div>
+      :gig="gig"
+      class="opacity-0 animate-fade-in-down"
+      :style="{ animationDelay: `${ind * 0.1}s` }"
+    />
   </div>
 </template>
 
@@ -42,6 +23,10 @@ import store from "../store";
 import Hero from "../components/Hero.vue";
 import Search from "../components/Search.vue";
 import { computed } from "vue";
+import GigList from "../components/GigList.vue";
 
-const gigs = computed(() => store.state.gigs);
+const gigs = computed(() => store.state.gigs.data);
+const gigsLoading = computed(() => store.state.gigs.loading);
+
+store.dispatch("getGigs");
 </script>

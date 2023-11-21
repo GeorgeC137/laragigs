@@ -20,7 +20,7 @@ class GigController extends Controller
     {
         $user = $request->user();
 
-        return GigResource::collection(Job::where('user_id', $user->id)->paginate());
+        return GigResource::collection(Job::where('user_id', $user->id)->paginate(6));
     }
 
     /**

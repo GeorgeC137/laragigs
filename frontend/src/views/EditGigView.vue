@@ -8,7 +8,7 @@
 
       <div v-if="gigLoading" class="flex justify-center font-semibold">Loading...</div>
 
-      <form v-else @submit.prevent="editGig">
+      <form v-else @submit.prevent="editGig" class="animate-fade-in-down">
         <div class="mb-6">
           <label for="company" class="inline-block text-lg mb-2">Company Name</label>
           <input
@@ -142,7 +142,7 @@
 
         <div class="mb-6">
           <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black text-lg">
-            Create Gig
+            Edit Gig
           </button>
 
           <router-link :to="{ name: 'Home' }" class="text-black ml-4"> Back </router-link>
@@ -207,6 +207,10 @@ function editGig() {
   store
     .dispatch("saveGig", model.value)
     .then(() => {
+      store.commit("notify", {
+        type: "success",
+        message: "Gig Updated Successfully",
+      });
       router.push({
         name: "Home",
       });
