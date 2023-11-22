@@ -16,11 +16,9 @@ class GigController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $user = $request->user();
-
-        return GigResource::collection(Job::where('user_id', $user->id)->paginate(6));
+        return GigResource::collection(Job::latest()->paginate(4));
     }
 
     /**

@@ -9,6 +9,7 @@ const store = createStore({
         },
         gigs: {
             loading: false,
+            links: [],
             data: []
         },
         currentGig: {
@@ -74,9 +75,10 @@ const store = createStore({
                     throw err
                 })
         },
-        getGigs({ commit }) {
+        getGigs({ commit }, {url = null} = {}) {
+            url = url || '/gigs'
             commit('setGigsLoading', true)
-            return axiosClient.get('/gigs')
+            return axiosClient.get(url)
                 .then((res) => {
                     commit('setGigsLoading', false)
                     commit('setGigs', res.data)
@@ -109,6 +111,7 @@ const store = createStore({
         },
         setGigs: (state, gigs) => {
             state.gigs.data = gigs.data;
+            state.gigs.links = gigs.meta.links;
         },
         notify: (state, {message, type}) => {
             state.notification.show = true;

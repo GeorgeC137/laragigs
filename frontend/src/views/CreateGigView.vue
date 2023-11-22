@@ -6,7 +6,7 @@
         <p class="mb-4">Post a gig to find a developer</p>
       </header>
 
-      <form @submit.prevent="saveGig">
+      <form @submit.prevent="saveGig" class="animate-fade-in-down">
         <div class="mb-6">
           <label for="company" class="inline-block text-lg mb-2">Company Name</label>
           <input

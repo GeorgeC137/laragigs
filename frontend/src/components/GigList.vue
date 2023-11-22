@@ -15,11 +15,11 @@
         <div class="text-xl font-bold mb-4">{{ gig.company }}</div>
         <ul class="flex">
           <li
-            v-for="(tag, index) in gig.tags"
+            v-for="(tag, index) in gig.tags.split(',').map((tag) => tag.trim())"
             :key="index"
             class="flex items-center justify-center bg-black text-white rounded-xl py-1 px-3 mr-2 text-xs"
           >
-            <router-link to="#">{{ tag }}</router-link>
+            <router-link :to="tag">{{ tag }}</router-link>
           </li>
         </ul>
         <div class="text-lg mt-4">
