@@ -41,6 +41,23 @@ class GigController extends Controller
         return new GigResource($gig);
     }
 
+    public function  search()
+    {
+        if (request('search')) {
+            $gigs = Job::where('title', 'like', '%' . request('search') . '%')
+                ->orWhere('description', 'like', '%' . request('search') . '%')
+                ->orWhere('company', 'like', '%' . request('search') . '%')
+                ->orWhere('location', 'like', '%' . request('search') . '%')
+                ->orWhere('tags', 'like', '%' . request('search') . '%')
+                ->paginate(4);
+
+            return GigResource::collection($gigs);
+        }
+        return response([
+            'message' => 'No results found'
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */

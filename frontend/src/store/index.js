@@ -87,6 +87,15 @@ const store = createStore({
         },
         deleteGig({ }, id) {
             return axiosClient.delete(`/gigs/${id}`)
+        },
+        searchGigs({ commit }, search) {
+            commit('setSearchedGigsLoading', true)
+            return axiosClient.get(`/gigs-search?search=${search}`)
+                .then((res) => {
+                    commit('setSearchedGigsLoading', false)
+                    commit('setSearchedGigs', res.data)
+                    return res;
+                })
         }
     },
     mutations: {
@@ -112,6 +121,12 @@ const store = createStore({
         setGigs: (state, gigs) => {
             state.gigs.data = gigs.data;
             state.gigs.links = gigs.meta.links;
+        },
+        setSearchedGigsLoading: (state, loading) => {
+            state.gigs.loading = loading;
+        },
+        setSearchedGigs: (state, gigs) => {
+            state.gigs.data = gigs.data;
         },
         notify: (state, {message, type}) => {
             state.notification.show = true;
