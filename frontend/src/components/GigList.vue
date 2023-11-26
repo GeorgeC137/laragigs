@@ -17,9 +17,10 @@
           <li
             v-for="(tag, index) in gig.tags.split(',').map((tag) => tag.trim())"
             :key="index"
-            class="flex items-center justify-center bg-black text-white rounded-xl py-1 px-3 mr-2 text-xs"
+            class="flex items-center justify-center bg-black text-white rounded-xl py-1 px-3 mr-2 text-xs cursor-pointer"
+            @click="filterGigs(tag)"
           >
-            <router-link :to="tag">{{ tag }}</router-link>
+            {{ tag }}
           </li>
         </ul>
         <div class="text-lg mt-4">
@@ -31,7 +32,13 @@
 </template>
 
 <script setup>
+import store from "../store";
+
 const { gig } = defineProps({
   gig: Object,
 });
+
+function filterGigs(tag) {
+  store.dispatch("filterGigs", tag);
+}
 </script>

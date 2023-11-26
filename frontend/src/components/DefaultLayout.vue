@@ -5,7 +5,7 @@
         ><img class="w-24" src="https://picsum.photos/600" alt="" :class="logo"
       /></router-link>
       <ul class="flex space-x-6 mr-6 text-lg">
-        <li class="text-laravel font-semibold">Welcome {{ user.name }}</li>
+        <li class="text-laravel font-semibold">Welcome {{ user }}</li>
         <li>
           <router-link :to="{ name: 'ManageGig' }" class="hover:text-laravel"
             ><i class="fa-solid fa-gear"></i> Manage Gigs</router-link
@@ -41,11 +41,11 @@
 <script setup>
 import store from "../store";
 import { useRouter } from "vue-router";
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import Notification from "./Notification.vue";
 
 const router = useRouter();
-const user = computed(() => store.state.user.data);
+const user = computed(() => store.state.user.name);
 
 function logout() {
   store.dispatch("logout").then(() => {

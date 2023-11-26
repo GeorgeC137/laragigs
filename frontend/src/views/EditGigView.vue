@@ -212,13 +212,11 @@ function editGig() {
         message: "Gig Updated Successfully",
       });
       router.push({
-        name: "Home",
+        name: "EditGig",
       });
     })
     .catch((error) => {
-      if (error.response.status == 422) {
-        errors.value = error.response.data.errors;
-      }
+      errors.value = error.response.data.message;
     });
 }
 </script>

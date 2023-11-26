@@ -58,18 +58,25 @@ class GigController extends Controller
         ]);
     }
 
+    public function filterByTags()
+    {
+        if (request('tag')) {
+            $gigs = Job::where('tags', 'like', '%' . request('tag') . '%')
+                ->paginate(4);
+
+            return GigResource::collection($gigs);
+        }
+        return response([
+            'message' => 'No results found'
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(Job $gig, Request $request)
+    public function show(Job $gig)
     {
-        $user = $request->user();
-
-        if ($user->id === $gig->user_id) {
-            return new GigResource($gig);
-        } else {
-            abort(403, 'Unauthorized Action!!!');
-        }
+        return new GigResource($gig);
     }
 
     /**

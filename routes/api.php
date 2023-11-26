@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::resource('/gigs', GigController::class);
-    Route::get('/gigs-search', [GigController::class, 'search']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/gigs-search', [GigController::class, 'search']);
+Route::get('/gigs-tags', [GigController::class, 'filterByTags']);

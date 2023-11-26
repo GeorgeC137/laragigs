@@ -5,6 +5,7 @@ const store = createStore({
     state: {
         user: {
             data: {},
+            name: sessionStorage.getItem('username'),
             token: sessionStorage.getItem('TOKEN'),
         },
         gigs: {
@@ -89,11 +90,20 @@ const store = createStore({
             return axiosClient.delete(`/gigs/${id}`)
         },
         searchGigs({ commit }, search) {
-            commit('setSearchedGigsLoading', true)
+            commit('setGigsLoading', true)
             return axiosClient.get(`/gigs-search?search=${search}`)
                 .then((res) => {
-                    commit('setSearchedGigsLoading', false)
-                    commit('setSearchedGigs', res.data)
+                    commit('setGigsLoading', false)
+                    commit('setGigs', res.data)
+                    return res;
+                })
+        },
+        filterGigs({ commit }, tag) {
+            commit('setGigsLoading', true);
+            return axiosClient.get(`/gigs-tags?tag=${tag}`)
+                .then((res) => {
+                    commit('setGigsLoading', false);
+                    commit('setGigs', res.data);
                     return res;
                 })
         }
@@ -102,12 +112,16 @@ const store = createStore({
         logout: (state) => {
             state.user.data = {};
             state.user.token = null;
+            state.user.name = null;
             sessionStorage.removeItem('TOKEN');
+            sessionStorage.removeItem('username');
         },
         setUser: (state, userData) => {
             state.user.data = userData.user;
+            state.user.name = userData.name;
             state.user.token = userData.token;
             sessionStorage.setItem('TOKEN', userData.token);
+            sessionStorage.setItem('username', userData.name);
         },
         setCurrentGigLoading: (state, loading) => {
             state.currentGig.loading = loading;
@@ -121,12 +135,6 @@ const store = createStore({
         setGigs: (state, gigs) => {
             state.gigs.data = gigs.data;
             state.gigs.links = gigs.meta.links;
-        },
-        setSearchedGigsLoading: (state, loading) => {
-            state.gigs.loading = loading;
-        },
-        setSearchedGigs: (state, gigs) => {
-            state.gigs.data = gigs.data;
         },
         notify: (state, {message, type}) => {
             state.notification.show = true;

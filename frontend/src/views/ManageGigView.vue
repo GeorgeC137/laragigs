@@ -7,6 +7,10 @@
 
       <div class="flex justify-center font-semibold" v-if="gigsLoading">Loading..</div>
 
+      <div class="flex justify-center font-semibold text-red-500" v-else-if="errorMsg">
+        {{ errorMsg }}
+      </div>
+
       <div v-else>
         <table class="w-full animate-fade-in-down table-auto rounded-sm">
           <tbody>
@@ -66,22 +70,29 @@
 import store from "../store";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 const gigs = computed(() => store.state.gigs.data);
 const gigsLoading = computed(() => store.state.gigs.loading);
 const links = computed(() => store.state.gigs.links);
 const router = useRouter();
+const errorMsg = ref("");
 
 store.dispatch("getGigs");
 
 function deleteGig(gig) {
   if (confirm("Are you sure you want to delete this gig?")) {
     // delete gig
-    store.dispatch("deleteGig", gig.id).then(() => {
-      router.push({
-        name: "Home",
+    store
+      .dispatch("deleteGig", gig.id)
+      .then(() => {
+        router.push({
+          name: "Home",
+        });
+      })
+      .catch((error) => {
+        errorMsg.value = error.response.data.message;
       });
-    });
   }
 }
 
